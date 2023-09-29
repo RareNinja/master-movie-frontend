@@ -11,7 +11,7 @@ export default ({ black, setSearchItem }: HeaderProps) => {
     <header className={black ? "black" : ""}>
       <div className="header--logo">
         <a href="/">
-
+          <img src="../../assets/images/iconsfilmes.png" alt="Fire Movies" />
         </a>
       </div>
 

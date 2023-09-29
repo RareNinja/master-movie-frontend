@@ -1,5 +1,5 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const api = axios.create({
-    baseURL: `http://localhost:5050`
-})
+  baseURL: `https://master-movies-api-1eb9305b8fb8.herokuapp.com`,
+});
