@@ -30,7 +30,7 @@ export type InfoProp = {
     ];
     number_of_seasons: number;
     original_name: string;
-    first_air_date: number;
+    first_air_date: Date;
   };
   length: number;
 };

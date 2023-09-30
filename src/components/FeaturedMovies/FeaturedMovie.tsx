@@ -5,7 +5,7 @@ import { InfoProp } from "../../types";
 export type ItemProps = {
   first_air_date: string,
   genres: {
-    name : string
+    name: string
   },
   overview: String,
   original_name: String,
