@@ -25,7 +25,7 @@ type ListProps = {
 
 const App = () => {
   const [movieList, setMovieList] = useState<ListProps[]>([]);
-  const [featuredData, setFeaturedData] = useState({} as InfoProp);
+  const [featuredData, setFeaturedData] = useState({} as ItemPropsByData);
   const [blackHeader, setBlackHeader] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [movieSelected, setMovieSelected] = useState<ItemPropsByData>();
@@ -56,8 +56,8 @@ const App = () => {
         );
         let chosen = originals.items.data.results[randomChosen];
         let chosenInfo = await tmdb.getMovieInfo(chosen.id, "tv") as InfoProp;
-        if (!chosenInfo) loadAll();
-        setFeaturedData(chosenInfo);
+        if (!chosenInfo.data) loadAll();
+        setFeaturedData(chosenInfo.data);
       }
     };
 
@@ -112,7 +112,7 @@ const App = () => {
     <div className="page">
       <Header black={blackHeader} setSearchItem={setSearchItem} />
 
-      {/* {featuredData && <FeaturedMovie item={featuredData} />} */}
+      {featuredData && <FeaturedMovie item={featuredData} />}
 
       <section className="lists">
         {resultSearch?.length > 0 && resultSearch != null ? (
