@@ -3,7 +3,7 @@ import "./FeaturedMovie.css";
 import { InfoProp } from "../../types";
 
 export type ItemProps = {
-  first_air_date: Date,
+  first_air_date: string,
   genres: {
     name : string
   },
