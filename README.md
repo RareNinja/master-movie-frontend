@@ -32,7 +32,7 @@ Além disto é bom ter um editor para trabalhar com o código como [VSCode](http
 Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 - ReactJS
-- Javascript
+- Typescript
 - Next.js
 
 ### 📕 Bibliotecas

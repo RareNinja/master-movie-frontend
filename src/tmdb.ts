@@ -61,7 +61,6 @@ const tmdb = {
           break;
       }
     }
-    console.log(info, "infod");
     return info;
   },
 };

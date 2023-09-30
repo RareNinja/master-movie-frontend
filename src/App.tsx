@@ -6,7 +6,7 @@ import FeaturedMovie, { ItemProps } from "./components/FeaturedMovies/FeaturedMo
 import Header from "./components/Header/Header";
 import Modal from "react-modal";
 import CloseIcon from "@mui/icons-material/Close";
-import { InfoProp } from "./types";
+import { InfoProp, ItemPropsByData } from "./types";
 import { AxiosResponse } from "axios";
 
 const customStyles = {
@@ -20,7 +20,7 @@ const customStyles = {
 type ListProps = {
   slug: string;
   title: string;
-  items: AxiosResponse<any,any>;
+  items: AxiosResponse<any, any>;
 }
 
 const App = () => {
@@ -28,25 +28,25 @@ const App = () => {
   const [featuredData, setFeaturedData] = useState({} as InfoProp);
   const [blackHeader, setBlackHeader] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [movieSelected, setMovieSelected] = useState<InfoProp | undefined>();
+  const [movieSelected, setMovieSelected] = useState<ItemPropsByData>();
   const [searchItem, setSearchItem] = useState<string>('');
-  const [resultSearch, setResultSearch] = useState(null);
+  const [resultSearch, setResultSearch] = useState<any>(null);
 
   const handleModal = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSelectedMovie = async (item: InfoProp) => {
+  const handleSelectedMovie = async (item: ItemPropsByData) => {
     await tmdb
-      .getMovieInfo(item.data.id, "movie")
-      .then((res: InfoProp) => setMovieSelected(res));
+      .getMovieInfo(item.id, "movie")
+      .then((res: InfoProp) => setMovieSelected(res.data));
   };
 
   useEffect(() => {
     const loadAll = async () => {
       // Pegando a lista TOTAL
       let list = await tmdb.getHomeList();
-      console.log(list, 'list')
+
       setMovieList(list);
       // Pegando o Featured
       let originals = list.find((item) => item.slug === "originals") as ListProps;
@@ -81,8 +81,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (movieSelected?.data.id) {
-      console.log(movieSelected);
+    if (movieSelected?.id) {
       handleModal();
     }
   }, [movieSelected]);
@@ -97,13 +96,10 @@ const App = () => {
         fetch(endpoint)
           .then((response) => response.json())
           .then((json) => {
-            // API doesn't actually throw an error if no API key
             if (!json?.results) {
               throw new Error(json?.statusMessage ?? "Error");
             }
             setResultSearch(json.results);
-            // replace state on page 1 of a new search
-            // otherwise append to exisiting
           })
           .catch((error) => console.error("Error:", error));
       }, 500);
@@ -116,10 +112,10 @@ const App = () => {
     <div className="page">
       <Header black={blackHeader} setSearchItem={setSearchItem} />
 
-      {featuredData && <FeaturedMovie item={featuredData} />}
+      {/* {featuredData && <FeaturedMovie item={featuredData} />} */}
 
       <section className="lists">
-        {resultSearch && resultSearch != null ? (
+        {resultSearch?.length > 0 && resultSearch != null ? (
           <MovieRow
             title={"Resultado da pesquisa"}
             items={{ data: { results: resultSearch } }}
@@ -166,16 +162,16 @@ const App = () => {
             <CloseIcon />
           </button>
         </div>
-        {movieSelected?.data.id ? (
+        {movieSelected?.id ? (
           <div className="containerMovie">
             <section className="sectionItems">
               <div className="poster_wrapper true">
                 <div className="poster">
                   <div className="image_content backdrop">
-                    {movieSelected?.data.poster_path ? (
+                    {movieSelected?.poster_path ? (
                       <img
-                        src={`https://image.tmdb.org/t/p//w300_and_h450_bestv2${movieSelected.data.poster_path}`}
-                        alt={movieSelected.data.original_title}
+                        src={`https://image.tmdb.org/t/p//w300_and_h450_bestv2${movieSelected.poster_path}`}
+                        alt={movieSelected.original_title}
                       />
                     ) : (
                       <img
@@ -194,36 +190,36 @@ const App = () => {
                     style={{ margin: 36, color: "white" }}
                   >
                     <h2>
-                      {movieSelected.data.title}
-                      <span> ({movieSelected.data.release_date.split("-")[0]})</span>
+                      {movieSelected.title}
+                      <span> ({movieSelected.release_date.split("-")[0]})</span>
                     </h2>
 
                     <div className="facts">
-                      {movieSelected.data.genres.map((item: {name:string}, index: string | number) => {
+                      {movieSelected.genres.map((item: { name: string }, index: string | number) => {
                         return (
-                          <span>
+                          <span key={`${item.name}${index}`}>
                             {index !== 0 ? ", " : ""}
                             {item.name}
                           </span>
                         );
                       })}
-                      <span> ● {movieSelected.data.runtime}m</span>
+                      <span> ● {movieSelected.runtime}m</span>
                     </div>
 
                     <div className="avaliations" style={{ marginTop: 22 }}>
                       Avaliação dos usuários{" "}
                       <span>
-                        {movieSelected.data.vote_average.toFixed(2)} Pontos
+                        {movieSelected.vote_average.toFixed(2)} Pontos
                       </span>
                     </div>
 
                     <div className="tagline" style={{ marginTop: 22 }}>
-                      "{movieSelected.data.tagline}"
+                      "{movieSelected.tagline}"
                     </div>
 
                     <div className="sinopse" style={{ marginTop: 22 }}>
                       <h3>Sinopse</h3>
-                      <p>{movieSelected.data.overview}</p>
+                      <p>{movieSelected.overview}</p>
                     </div>
                   </div>
                 </section>
@@ -231,7 +227,7 @@ const App = () => {
             </section>
             <div className="companies">
               <h2>Produzido por</h2>
-              {movieSelected.data.production_companies.map((item: {name: string}, index: number) => {
+              {movieSelected.production_companies.map((item: { name: string }, index: number) => {
                 return (
                   <span>
                     {index !== 0 ? ", " : ""}

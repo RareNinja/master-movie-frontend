@@ -19,8 +19,7 @@ type FeaturedProps = {
   item: InfoProp;
 }
 
-const FeaturedMoviet = ({ item }: FeaturedProps) => {
-
+const FeaturedMovie = ({ item }: FeaturedProps) => {
   let firstDate = new Date(item.data.first_air_date);
   let genres = [];
   for (let i in item.data.genres) {
@@ -68,4 +67,4 @@ const FeaturedMoviet = ({ item }: FeaturedProps) => {
 };
 
 
-export default FeaturedMoviet;
+export default FeaturedMovie;
