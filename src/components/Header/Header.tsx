@@ -3,7 +3,7 @@ import "./Header.css";
 
 type HeaderProps = {
   black: boolean,
-  setSearchItem: (item: any) => void
+  setSearchItem: (item: string) => void
 }
 
 export default ({ black, setSearchItem }: HeaderProps) => {

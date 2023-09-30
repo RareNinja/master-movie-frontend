@@ -2,18 +2,19 @@ import React, { useState } from "react";
 import "./MovieRow.css";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { InfoProp } from "../../types";
 const imgnotfound = require("../../assets/images/imgnotfound.png")
 
 type MovieRowPros = {
   title: String,
   items: ItemsProps,
   handleModal: () => void,
-  handleSelectedMovie: (item: any) => void,
+  handleSelectedMovie: (item: InfoProp) => void,
 }
 
 type ItemsProps = {
   data: {
-    results: any
+    results: InfoProp[]
   }
 }
 
@@ -57,7 +58,7 @@ const MovieRow = ({ title, items, handleModal, handleSelectedMovie }: MovieRowPr
               }}
             >
               {items?.data.results?.length > 0 &&
-                items.data.results.map((item: any, key: any) => (
+                items.data.results.map((item: InfoProp, key: number) => (
 
                   <div
                     key={key}
@@ -67,9 +68,9 @@ const MovieRow = ({ title, items, handleModal, handleSelectedMovie }: MovieRowPr
                     }}
                   >
                     <img
-                      src={item.poster_path !== null ? `https://image.tmdb.org/t/p/w300${item.poster_path}` : imgnotfound}
-                      alt={item.original_title}
-                      style={item.poster_path !== null ? {} : { maxHeight: 226 }}
+                      src={item.data.poster_path !== null ? `https://image.tmdb.org/t/p/w300${item.data.poster_path}` : imgnotfound}
+                      alt={item.data.original_title}
+                      style={item.data.poster_path !== null ? {} : { maxHeight: 226 }}
                     />
                   </div>
                 ))}

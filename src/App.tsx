@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import tmdb from "./tmdb";
 import MovieRow from "./components/MovieRow/MovieRow";
-import FeaturedMovie from "./components/FeaturedMovies/FeaturedMovie";
+import FeaturedMovie, { ItemProps } from "./components/FeaturedMovies/FeaturedMovie";
 import Header from "./components/Header/Header";
 import Modal from "react-modal";
 import CloseIcon from "@mui/icons-material/Close";
-import { api } from "./api/api";
+import { InfoProp } from "./types";
+import { AxiosResponse } from "axios";
 
 const customStyles = {
   content: {
@@ -19,26 +20,26 @@ const customStyles = {
 type ListProps = {
   slug: string;
   title: string;
-  items: any;
+  items: AxiosResponse<any,any>;
 }
 
 const App = () => {
   const [movieList, setMovieList] = useState<ListProps[]>([]);
-  const [featuredData, setFeaturedData] = useState({} as any);
+  const [featuredData, setFeaturedData] = useState({} as InfoProp);
   const [blackHeader, setBlackHeader] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [movieSelected, setMovieSelected] = useState({} as any);
-  const [searchItem, setSearchItem] = useState<any>(null);
+  const [movieSelected, setMovieSelected] = useState<InfoProp | undefined>();
+  const [searchItem, setSearchItem] = useState<string>('');
   const [resultSearch, setResultSearch] = useState(null);
 
   const handleModal = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSelectedMovie = async (item: any) => {
+  const handleSelectedMovie = async (item: InfoProp) => {
     await tmdb
-      .getMovieInfo(item.id, "movie")
-      .then((res: any) => setMovieSelected(res));
+      .getMovieInfo(item.data.id, "movie")
+      .then((res: InfoProp) => setMovieSelected(res));
   };
 
   useEffect(() => {
@@ -48,15 +49,15 @@ const App = () => {
       console.log(list, 'list')
       setMovieList(list);
       // Pegando o Featured
-      let originals = list.find((item) => item.slug === "originals") as any;
+      let originals = list.find((item) => item.slug === "originals") as ListProps;
       if (originals) {
         let randomChosen = Math.floor(
           Math.random() * (originals.items.data.results.length - 1)
         );
         let chosen = originals.items.data.results[randomChosen];
-        let chosenInfo = await tmdb.getMovieInfo(chosen.id, "tv") as any;
+        let chosenInfo = await tmdb.getMovieInfo(chosen.id, "tv") as InfoProp;
         if (!chosenInfo) loadAll();
-        setFeaturedData(chosenInfo.data);
+        setFeaturedData(chosenInfo);
       }
     };
 
@@ -80,7 +81,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    if (movieSelected?.id) {
+    if (movieSelected?.data.id) {
       console.log(movieSelected);
       handleModal();
     }
@@ -126,7 +127,7 @@ const App = () => {
             handleSelectedMovie={handleSelectedMovie}
           />
         ) : (
-          movieList.map((item, itemMovie, key: any) => (
+          movieList.map((item, key: number) => (
             <MovieRow
               key={key}
               title={item.title}
@@ -156,7 +157,7 @@ const App = () => {
         isOpen={isOpen}
         onRequestClose={handleModal}
         onAfterClose={() => {
-          setMovieSelected({});
+          setMovieSelected(undefined);
         }}
         style={customStyles}
       >
@@ -165,16 +166,16 @@ const App = () => {
             <CloseIcon />
           </button>
         </div>
-        {movieSelected?.id ? (
+        {movieSelected?.data.id ? (
           <div className="containerMovie">
             <section className="sectionItems">
               <div className="poster_wrapper true">
                 <div className="poster">
                   <div className="image_content backdrop">
-                    {movieSelected?.poster_path ? (
+                    {movieSelected?.data.poster_path ? (
                       <img
-                        src={`https://image.tmdb.org/t/p//w300_and_h450_bestv2${movieSelected.poster_path}`}
-                        alt={movieSelected.original_title}
+                        src={`https://image.tmdb.org/t/p//w300_and_h450_bestv2${movieSelected.data.poster_path}`}
+                        alt={movieSelected.data.original_title}
                       />
                     ) : (
                       <img
@@ -193,12 +194,12 @@ const App = () => {
                     style={{ margin: 36, color: "white" }}
                   >
                     <h2>
-                      {movieSelected.title}
-                      <span> ({movieSelected.release_date.split("-")[0]})</span>
+                      {movieSelected.data.title}
+                      <span> ({movieSelected.data.release_date.split("-")[0]})</span>
                     </h2>
 
                     <div className="facts">
-                      {movieSelected.genres.map((item: any, index: string | number) => {
+                      {movieSelected.data.genres.map((item: {name:string}, index: string | number) => {
                         return (
                           <span>
                             {index !== 0 ? ", " : ""}
@@ -206,23 +207,23 @@ const App = () => {
                           </span>
                         );
                       })}
-                      <span> ● {movieSelected.runtime}m</span>
+                      <span> ● {movieSelected.data.runtime}m</span>
                     </div>
 
                     <div className="avaliations" style={{ marginTop: 22 }}>
                       Avaliação dos usuários{" "}
                       <span>
-                        {movieSelected.vote_average.toFixed(2)} Pontos
+                        {movieSelected.data.vote_average.toFixed(2)} Pontos
                       </span>
                     </div>
 
                     <div className="tagline" style={{ marginTop: 22 }}>
-                      "{movieSelected.tagline}"
+                      "{movieSelected.data.tagline}"
                     </div>
 
                     <div className="sinopse" style={{ marginTop: 22 }}>
                       <h3>Sinopse</h3>
-                      <p>{movieSelected.overview}</p>
+                      <p>{movieSelected.data.overview}</p>
                     </div>
                   </div>
                 </section>
@@ -230,7 +231,7 @@ const App = () => {
             </section>
             <div className="companies">
               <h2>Produzido por</h2>
-              {movieSelected.production_companies.map((item: any, index: number) => {
+              {movieSelected.data.production_companies.map((item: {name: string}, index: number) => {
                 return (
                   <span>
                     {index !== 0 ? ", " : ""}
