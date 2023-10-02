@@ -45,11 +45,11 @@ const App = () => {
 
   useEffect(() => {
     const loadAll = async () => {
-      // Pegando a lista TOTAL
+
       let list = await tmdb.getHomeList();
 
       setMovieList(list);
-      // Pegando o Featured
+
       let originals = list.find((item) => item.slug === "originals") as ListProps;
       if (originals) {
         let randomChosen = Math.floor(
@@ -151,6 +151,7 @@ const App = () => {
           />
         </div>
       )}
+
       <Modal
         isOpen={isOpen}
         onRequestClose={handleModal}

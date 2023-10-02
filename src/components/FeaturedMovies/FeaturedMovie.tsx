@@ -66,5 +66,4 @@ const FeaturedMovie = ({ item }: FeaturedProps) => {
   );
 };
 
-
-export default FeaturedMovie;
+export default FeaturedMovie
