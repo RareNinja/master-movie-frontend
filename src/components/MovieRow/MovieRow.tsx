@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./MovieRow.css";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { InfoProp, ItemPropsByData } from "../../types";
+import { ItemPropsByData } from "../../types";
 const imgnotfound = require("../../assets/images/imgnotfound.png")
 
 type MovieRowPros = {

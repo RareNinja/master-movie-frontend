@@ -30,6 +30,7 @@ const App = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [movieSelected, setMovieSelected] = useState<ItemPropsByData>();
   const [searchItem, setSearchItem] = useState<string>('');
+  const [safeSearch, setSafeSearch] = useState<string>('');
   const [resultSearch, setResultSearch] = useState<any>(null);
 
   const handleModal = () => {
@@ -87,13 +88,14 @@ const App = () => {
   }, [movieSelected]);
 
   useEffect(() => {
-    if (searchItem && searchItem?.length > 2) {
+    if (searchItem && searchItem?.length > 1) {
       setTimeout(() => {
-        const endpoint = `https://api.themoviedb.org/3/search/movie?api_key=4eefae54393dcb3c2ed71eca814368c5&language=en-US&query=${encodeURIComponent(
+        const endpoint = `https://api.themoviedb.org/3/search/movie?include_adult=${safeSearch}&api_key=4eefae54393dcb3c2ed71eca814368c5&language=pt-BR&query=${encodeURIComponent(
           searchItem
         )}`;
 
         fetch(endpoint)
+
           .then((response) => response.json())
           .then((json) => {
             if (!json?.results) {
