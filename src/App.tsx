@@ -91,7 +91,7 @@ const App = () => {
   useEffect(() => {
     if (searchItem && searchItem?.length > 1) {
       setTimeout(() => {
-        const endpoint = `https://api.themoviedb.org/3/search/movie?include_adult=${safeSearch}&api_key=4eefae54393dcb3c2ed71eca814368c5&language=pt-BR&query=${encodeURIComponent(
+        const endpoint = `https://api.themoviedb.org/3/search/movie?include_adult=${safeSearch}&api_key=925987fcf661f52637f572fcb8214100&language=pt-BR&query=${encodeURIComponent(
           searchItem
         )}`;
 
