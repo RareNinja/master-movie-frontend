@@ -45,4 +45,9 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
 [Node.js](https://nodejs.org/en/)
 [Npm](https://docs.npmjs.com/cli/v9/commands/npm-install) ou [Yarn](https://yarnpkg.com/). 
 O editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/).
+
+# Hospedagem vercel 
+
+- Link para acesso ao [vercel](https://vercel.com)
+- Link para acesso ao [Fire Movies](https://firemovies.vercel.app)
 <hr/>
