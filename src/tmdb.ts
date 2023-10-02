@@ -11,7 +11,7 @@ const tmdb = {
       },
       {
         slug: "trending",
-        title: "Recomendados para Você",
+        title: "Recomendados",
         items: await api.get("/trendingMovies"),
       },
       {

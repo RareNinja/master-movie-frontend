@@ -8,6 +8,7 @@ import Modal from "react-modal";
 import CloseIcon from "@mui/icons-material/Close";
 import { InfoProp, ItemPropsByData } from "./types";
 import { AxiosResponse } from "axios";
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 
 const customStyles = {
   content: {
@@ -137,18 +138,14 @@ const App = () => {
         )}
       </section>
       <footer>
-        Project developed by {" "}
-        <a href="https://www.linkedin.com/in/davi-balan/">
-          Davi Jesus Balan
-        </a>
+        Project developed by Davi Balan
       </footer>
 
       {movieList?.length <= 0 && (
         <div className="loading">
-          <img
-            src="https://media.tenor.com/9CqTZoKN-KsAAAAC/loading-windows.gif"
-            alt="Carregando"
-          />
+          <SkeletonTheme baseColor="#202020" highlightColor="#444">
+            <Skeleton />
+          </SkeletonTheme>
         </div>
       )}
 
